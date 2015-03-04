@@ -2,7 +2,7 @@ package GameInfo;
 
 import java.util.ArrayList;
 
-public class PlayerData {
+public class PlayerDataExtended {
 	
 	private final long ACCOUNT_32BIT_ID;
 	private final long PLAYER_SLOT;
@@ -40,7 +40,7 @@ public class PlayerData {
 	 * @param playerSlot
 	 * @param heroID
 	 */
-	public PlayerData(long accountID, long playerSlot, long heroID) {
+	public PlayerDataExtended(long accountID, long playerSlot, long heroID) {
 		ACCOUNT_32BIT_ID = accountID;
 		PLAYER_SLOT = playerSlot;
 		RADIANT = PlayerSlotAnalyzer.isRadiant(playerSlot);

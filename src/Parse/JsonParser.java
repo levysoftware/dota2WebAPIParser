@@ -11,18 +11,19 @@ import org.json.simple.parser.ParseException;
 import GameInfo.Ability;
 import GameInfo.ControlledUnits;
 import GameInfo.GameData;
-import GameInfo.PlayerData;
-import GameTracker.IO;
+import GameInfo.PlayerDataExtended;
 
 public class JsonParser {
 
 	public static String parseVanityURL(String json) throws ParseException {
+		// TODO: Check for failure
 		JSONParser parser = new JSONParser();
 		JSONObject obj = (JSONObject) parser.parse(json);
 		return (String) ((JSONObject) (obj.get("response"))).get("steamid");
 	}
 
 	public static String parseLastMatchID(String json) throws ParseException {
+		// TODO: Check for failure
 		JSONParser parser = new JSONParser();
 		JSONObject obj = (JSONObject) parser.parse(json);
 		JSONArray arr = (JSONArray) ((JSONObject) (obj.get("result"))).get("matches");
@@ -31,6 +32,7 @@ public class JsonParser {
 	}
 
 	public static GameData parseMatch(String json) throws ParseException {
+		// TODO: Check for failure
 		JSONParser parser = new JSONParser();
 		JSONObject obj = (JSONObject) parser.parse(json);
 		JSONObject info = (JSONObject) obj.get("result");
@@ -73,7 +75,7 @@ public class JsonParser {
 				long accountID  = (long) currentPlayer.get("account_id");
 				long playerSlot = (long) currentPlayer.get("player_slot");
 				long heroID     = (long) currentPlayer.get("hero_id");
-				PlayerData player = new PlayerData(accountID, playerSlot, heroID);
+				PlayerDataExtended player = new PlayerDataExtended(accountID, playerSlot, heroID);
 
 				long kills = (long) currentPlayer.get("kills");
 				long deaths = (long) currentPlayer.get("deaths");

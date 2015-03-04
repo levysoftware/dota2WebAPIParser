@@ -1,14 +1,12 @@
 package GameTracker;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 import org.json.simple.parser.ParseException;
 
 import GameInfo.Ability;
 import GameInfo.GameData;
-import GameInfo.PlayerData;
-import Parse.JsonParser;
+import GameInfo.PlayerDataExtended;
 import WebAPI.API;
 
 public class Main {
@@ -37,7 +35,7 @@ public class Main {
 		
 		// Player Data
 		while(data.hasNextPlayer()) {
-			PlayerData p = data.getNextPlayer();
+			PlayerDataExtended p = data.getNextPlayer();
 			IO.log("\n");
 			IO.log("Account ID: " + p.getAccountID());
 			IO.log("Kills: " + p.getKills());

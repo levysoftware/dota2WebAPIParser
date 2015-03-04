@@ -1,7 +1,6 @@
 package GameInfo;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * 
@@ -23,7 +22,7 @@ public class GameData {
 	private final long NEG_VOTES;
 	private final long GAME_MODE;
 
-	private ArrayList<PlayerData> players;
+	private ArrayList<PlayerDataExtended> players;
 	private int playerCounter;
 
 	private long radiantTowerStatus;
@@ -53,7 +52,7 @@ public class GameData {
 		NEG_VOTES = negativeVotes;
 		GAME_MODE = gameMode;
 
-		players = new ArrayList<PlayerData>();
+		players = new ArrayList<PlayerDataExtended>();
 		playerCounter = 0;
 
 		radiantTowerStatus = 0;
@@ -90,8 +89,8 @@ public class GameData {
 	public boolean hasNextPlayer() {
 		return (playerCounter < players.size());
 	}
-	public PlayerData getNextPlayer() {
-		PlayerData ret;
+	public PlayerDataExtended getNextPlayer() {
+		PlayerDataExtended ret;
 		if(playerCounter < players.size()) {
 			ret = players.get(playerCounter++);
 		} else {
@@ -115,6 +114,6 @@ public class GameData {
 
 	public void setRadiantWinner(boolean winner) { radiantWin = winner; }
 
-	public void addPlayer(PlayerData player) { players.add(player); }
+	public void addPlayer(PlayerDataExtended player) { players.add(player); }
 
 }
