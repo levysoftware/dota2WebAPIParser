@@ -16,7 +16,7 @@ import GameInfo.PlayerDataExtended;
 
 public class JsonParser {
 	
-	public static HeroMapping parseHeros(String json) throws ParseException {
+	public static HeroMapping parseHeroes(String json) throws ParseException {
 		// TODO: Check for failure
 		JSONParser parser = new JSONParser();
 		JSONObject obj    = (JSONObject) parser.parse(json);
