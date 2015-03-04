@@ -1,5 +1,6 @@
 # dota2WebAPIParser
-Gets recent games that a player has played using either a steam_id or a user name and then parses these games using the Steam WebAPI.
+Uses the Steam WebAPI to get data similar to that of sites like Dotabuff.
+If you have any ideas on improvements please let me know.
 
 Credits to KronuS (https://github.com/kronusme) on GitHub for his .json files containing data on hero abilities, items, lobby types and game modes.
 
