@@ -49,8 +49,8 @@ public class MatchHistory {
 	}
 	public void resetMatchCounter() { matchCounter = 0; }
 	
-	public void addMatch(long matchID, long matchSeqNumb, long startTime, long lobbyType) {
-		matches.add(new Match(matchID, matchSeqNumb, startTime, lobbyType));
+	public void addMatch(Match match) {
+		matches.add(match);
 	}
 	
 }

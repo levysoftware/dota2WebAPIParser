@@ -8,22 +8,55 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import DotaData.AbilityMapping;
 import DotaData.HeroMapping;
+import DotaData.ItemMapping;
 import GameInfo.Ability;
 import GameInfo.ControlledUnits;
 import GameInfo.GameData;
 import GameInfo.PlayerDataExtended;
+import GameTracker.IO;
+import Matches.Match;
 import Matches.MatchHistory;
 
 public class JsonParser {
 
-	public static MatchHistory getMatchHistory(String json) throws ParseException {
-		// TODO: Check for failure
-		JSONParser parser = new JSONParser();
-		JSONObject obj    = (JSONObject) parser.parse(json);
-		JSONObject inner  = (JSONObject) obj.get("result");
+	public static AbilityMapping parseAbilities(String json) throws ParseException {
+		JSONParser parser   = new JSONParser();
+		JSONObject obj      = (JSONObject) parser.parse(json);
+		JSONArray abilities = (JSONArray) obj.get("abilities");
 		
-		return new MatchHistory(0, 0, 0);
+		Iterator<JSONObject> iter = abilities.iterator();
+		AbilityMapping abilityMap = new AbilityMapping();
+		while(iter.hasNext()) {
+			JSONObject ability = iter.next();
+			
+			int abilityID = Integer.parseInt((String) ability.get("id"));
+			String abilityName = (String) ability.get("name");
+			
+			abilityMap.addMapping(abilityID, abilityName);
+		}
+		
+		return abilityMap;
+	}
+	
+	public static ItemMapping parseItems(String json) throws ParseException {
+		JSONParser parser   = new JSONParser();
+		JSONObject obj      = (JSONObject) parser.parse(json);
+		JSONArray items = (JSONArray) obj.get("items");
+		
+		Iterator<JSONObject> iter = items.iterator();
+		ItemMapping itemMap = new ItemMapping();
+		while(iter.hasNext()) {
+			JSONObject item = iter.next();
+			
+			int itemID      = (int) (long) item.get("id");
+			String itemName = (String) item.get("name");
+			
+			itemMap.addMapping(itemID, itemName);
+		}
+		
+		return itemMap;
 	}
 
 	public static HeroMapping parseHeroes(String json) throws ParseException {
@@ -56,13 +89,49 @@ public class JsonParser {
 		return (String) ((JSONObject) (obj.get("response"))).get("steamid");
 	}
 
-	public static String parseLastMatchID(String json) throws ParseException {
+	public static MatchHistory parseMatchHistory(String json) throws ParseException {
 		// TODO: Check for failure
+
 		JSONParser parser = new JSONParser();
-		JSONObject obj = (JSONObject) parser.parse(json);
-		JSONArray arr = (JSONArray) ((JSONObject) (obj.get("result"))).get("matches");
-		Iterator<JSONObject> iter = arr.iterator();
-		return ((JSONObject) iter.next()).get("match_id").toString();
+		JSONObject obj    = (JSONObject) parser.parse(json);
+		JSONObject inner  = (JSONObject) obj.get("result");
+
+		long numResults       = (long) inner.get("num_results");
+		long totalResults     = (long) inner.get("total_results");
+		long remainingResults = (long) inner.get("results_remaining");
+
+		JSONArray matches  = (JSONArray) inner.get("matches");
+		Iterator<JSONObject> iter = matches.iterator();
+
+		MatchHistory matchHistory = new MatchHistory(numResults, totalResults, remainingResults);
+
+		while(iter.hasNext()) {
+			JSONObject match = iter.next();
+
+			long matchID      = (long) match.get("match_id");
+			long matchSeqNumb = (long) match.get("match_seq_num");
+			long startTime    = (long) match.get("start_time");
+			long lobbyType    = (long) match.get("lobby_type");
+
+			Match m = new Match(matchID, matchSeqNumb, startTime, lobbyType);
+
+			JSONArray players = (JSONArray) match.get("players");
+			Iterator<JSONObject> iter2 = players.iterator();
+
+			while(iter2.hasNext()) {
+				JSONObject player = iter2.next();
+
+				long account32BitId  = (long) player.get("account_id");
+				long playerSlot      = (long) player.get("player_slot");
+				long heroId          = (long) player.get("hero_id");
+
+				m.addPlayer(account32BitId, playerSlot, heroId);
+			}
+
+			matchHistory.addMatch(m);
+		}
+
+		return matchHistory;
 	}
 
 	public static GameData parseMatch(String json) throws ParseException {

@@ -21,5 +21,11 @@ public class PlayerData {
 	public long getPlayerSlot() { return PLAYER_SLOT; }
 	public long getHeroID() { return HERO_ID; }
 	public boolean isRadiant() { return RADIANT; }
-
+	
+	/**
+	 * 
+	 * @return - Either "Radiant" or "Dire"
+	 */
+	public String getPlayerSide() { return isRadiant() ? "Radiant" : "Dire"; }
+	
 }

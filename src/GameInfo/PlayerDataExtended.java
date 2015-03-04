@@ -87,12 +87,6 @@ public class PlayerDataExtended extends PlayerData {
 		this.controlledUnits = controlledUnits;
 	}
 	
-	/**
-	 * 
-	 * @return - Either "Radiant" or "Dire"
-	 */
-	public String getPlayerSide() { return isRadiant() ? "Radiant" : "Dire"; }
-	
 	public long[] getItems() { return items; }
 	
 	public long getKills() { return kills; }

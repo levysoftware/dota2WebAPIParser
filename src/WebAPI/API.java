@@ -12,6 +12,7 @@ import org.json.simple.parser.ParseException;
 import DotaData.HeroMapping;
 import GameInfo.GameData;
 import GameTracker.Config;
+import Matches.MatchHistory;
 import Parse.JsonParser;
 
 public class API {
@@ -39,16 +40,19 @@ public class API {
 		return JsonParser.parseHeroes(hitAPI(apiCall));
 	}
 	
+	public static String get32BitUName(String steamUserName) throws IOException, ParseException {
+		return convert64To32(get64BitUName(steamUserName));
+	}
 	public static String get64BitUName(String steamUserName) throws IOException, ParseException {
 		String apiCall = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + 
 				Config.API_KEY + "&vanityurl=" + steamUserName.toLowerCase();
 		return JsonParser.parseVanityURL(hitAPI(apiCall));
 	}
-
-	public static String getLastMatchID(String user32BitID) throws IOException, ParseException {
-		String apiCall = "http://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1?key=" + 
-				Config.API_KEY + "&account_id=" + user32BitID + "&matches_requested=1";
-		return JsonParser.parseLastMatchID(hitAPI(apiCall));
+	
+	public static MatchHistory getMatches(String user32BitID) throws ParseException, IOException {
+		String apiCall = "http://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1?account_id=" + user32BitID +
+				"&key=" + Config.API_KEY;
+		return JsonParser.parseMatchHistory(hitAPI(apiCall));
 	}
 
 	public static GameData getMatchDetails(String matchID) throws ParseException, IOException {
