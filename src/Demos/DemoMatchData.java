@@ -42,6 +42,7 @@ public class DemoMatchData {
 			IO.log("Denies: " + p.getDenies());
 			IO.log("Gold: " + p.getGold());
 			IO.log("Gold Spent: " + p.getGoldSpent());
+			IO.log("Net Worth: " + p.getTotalGold());
 			IO.log("GPM: " + p.getGPM());
 			IO.log("XPM: " + p.getXPM());
 			IO.log("Hero Damage: " + p.getHeroDamage());
@@ -49,6 +50,7 @@ public class DemoMatchData {
 			IO.log("Tower Damage: " + p.getTowerDamage());
 			IO.log("Hero Level: " + p.getLevel());
 			IO.log("Player Slot: " + p.getPlayerSlot());
+			IO.log("Team: " + p.getPlayerSide());
 			for(long item : p.getItems()) {
 				IO.log("Item ID: " + item);
 			}

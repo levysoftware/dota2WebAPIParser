@@ -87,6 +87,12 @@ public class PlayerDataExtended extends PlayerData {
 		this.controlledUnits = controlledUnits;
 	}
 	
+	/**
+	 * 
+	 * @return - Either "Radiant" or "Dire"
+	 */
+	public String getPlayerSide() { return isRadiant() ? "Radiant" : "Dire"; }
+	
 	public long[] getItems() { return items; }
 	
 	public long getKills() { return kills; }
@@ -98,6 +104,7 @@ public class PlayerDataExtended extends PlayerData {
 	
 	public long getGold() { return gold; }
 	public long getGoldSpent() { return goldSpent; }
+	public long getTotalGold() { return gold + goldSpent; }
 	public long getGPM() { return gpm; }
 	public long getXPM() { return xpm; }
 	

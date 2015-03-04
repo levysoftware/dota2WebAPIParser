@@ -29,6 +29,11 @@ public class API {
 		return apiCall;
 	}
 	
+	/**
+	 * 
+	 * Will not localize names (Only returned in English ATM)
+	 * 
+	 */
 	public static HeroMapping getHeroMapping() throws ParseException, IOException {
 		String apiCall = "http://api.steampowered.com/IEconDOTA2_570/GetHeroes/v1?key=" + Config.API_KEY;
 		return JsonParser.parseHeros(hitAPI(apiCall));

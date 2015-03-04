@@ -7,6 +7,6 @@ public class PictureSize {
 	public final static int FULL_HORIZ = 2;
 	public final static int FULL_VERT  = 3;
 	
-	public final static String[] SUFFIXES = {"sb.png", "lg.png", "full.png", "vert.png"};
+	public final static String[] SUFFIXES = {"sb.png", "lg.png", "full.png", "vert.jpg"};
 	
 }
