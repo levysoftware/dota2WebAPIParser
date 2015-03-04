@@ -8,13 +8,37 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import DotaData.HeroMapping;
 import GameInfo.Ability;
 import GameInfo.ControlledUnits;
 import GameInfo.GameData;
 import GameInfo.PlayerDataExtended;
 
 public class JsonParser {
-
+	
+	public static HeroMapping parseHeros(String json) throws ParseException {
+		// TODO: Check for failure
+		JSONParser parser = new JSONParser();
+		JSONObject obj    = (JSONObject) parser.parse(json);
+		JSONObject inner  = (JSONObject) obj.get("result");
+		
+		JSONArray heroes  = (JSONArray) inner.get("heroes");
+		Iterator<JSONObject> iter = heroes.iterator();
+		
+		HeroMapping heroMap = new HeroMapping();
+		
+		while(iter.hasNext()) {
+			JSONObject heroData = iter.next();
+			
+			int heroID      = (int) (long) heroData.get("id");
+			String heroName = (String) heroData.get("name");
+			
+			heroMap.addMapping(heroID, heroName);
+		}
+		
+		return heroMap;
+	}
+	
 	public static String parseVanityURL(String json) throws ParseException {
 		// TODO: Check for failure
 		JSONParser parser = new JSONParser();

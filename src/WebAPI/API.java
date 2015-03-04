@@ -9,12 +9,31 @@ import java.net.URL;
 
 import org.json.simple.parser.ParseException;
 
+import DotaData.HeroMapping;
 import GameInfo.GameData;
 import GameTracker.Config;
 import Parse.JsonParser;
 
 public class API {
-
+	
+	public static String getHeroImage(String heroName, int pictureSize) {
+		String suffix;
+		
+		if(pictureSize > 0 && pictureSize < PictureSize.SUFFIXES.length) {
+			suffix = PictureSize.SUFFIXES[pictureSize];
+		} else {
+			suffix = PictureSize.SUFFIXES[PictureSize.SMALL];
+		}
+		
+		String apiCall = "http://cdn.dota2.com/apps/dota2/images/heroes/" + HeroMapping.getHeroNameShort(heroName) + "_" + suffix;
+		return apiCall;
+	}
+	
+	public static HeroMapping getHeroMapping() throws ParseException, IOException {
+		String apiCall = "http://api.steampowered.com/IEconDOTA2_570/GetHeroes/v1?key=" + Config.API_KEY;
+		return JsonParser.parseHeros(hitAPI(apiCall));
+	}
+	
 	public static String get64BitUName(String steamUserName) throws IOException, ParseException {
 		String apiCall = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + 
 				Config.API_KEY + "&vanityurl=" + steamUserName.toLowerCase();

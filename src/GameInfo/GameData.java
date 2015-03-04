@@ -99,6 +99,16 @@ public class GameData {
 		
 		return ret;
 	}
+	public PlayerData getPreviousPlayer() {
+		PlayerData ret;
+		if(playerCounter < players.size() && --playerCounter > 0) {
+			ret = players.get(playerCounter);
+		} else {
+			ret = null;
+		}
+		
+		return ret;
+	}
 	public void resetNextPlayerCounter() {
 		playerCounter = 0;
 	}

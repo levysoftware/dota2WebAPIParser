@@ -2,14 +2,7 @@ package GameInfo;
 
 import java.util.ArrayList;
 
-public class PlayerDataExtended {
-	
-	private final long ACCOUNT_32BIT_ID;
-	private final long PLAYER_SLOT;
-	
-	private final boolean RADIANT;
-	private final long HERO;
-	
+public class PlayerDataExtended extends PlayerData {
 	private long[] items;
 	
 	private long kills;
@@ -41,11 +34,9 @@ public class PlayerDataExtended {
 	 * @param heroID
 	 */
 	public PlayerDataExtended(long accountID, long playerSlot, long heroID) {
-		ACCOUNT_32BIT_ID = accountID;
-		PLAYER_SLOT = playerSlot;
-		RADIANT = PlayerSlotAnalyzer.isRadiant(playerSlot);
-		HERO = heroID;
+		super(accountID, playerSlot, heroID);
 		
+		// Initialize the items variable
 		items = new long[6];
 		
 		// Set everything to 0
@@ -95,15 +86,6 @@ public class PlayerDataExtended {
 		this.abilities = abilities;
 		this.controlledUnits = controlledUnits;
 	}
-	
-	/**
-	 * 
-	 * @return 32-bit id of the player's account
-	 */
-	public long getAccountID() { return ACCOUNT_32BIT_ID; }
-	public long getPlayerSlot() { return PLAYER_SLOT; }
-	public boolean isRadiant() { return RADIANT; }
-	public long getHeroID() { return HERO; }
 	
 	public long[] getItems() { return items; }
 	
