@@ -2,8 +2,6 @@ package Matches;
 
 import java.util.ArrayList;
 
-import GameInfo.PlayerData;
-
 public class MatchHistory {
 	
 	private final long NUMBER_RESULTS;

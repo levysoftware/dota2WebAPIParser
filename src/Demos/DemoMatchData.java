@@ -53,7 +53,7 @@ public class DemoMatchData {
 				IO.log("Item ID: " + item);
 			}
 			for(Ability ability : p.getAbilities()) {
-				//IO.log("Ability: " + ability.getAbilityID() + " " + ability.getPlayerLevel());
+				IO.log("Ability: " + ability.getAbilityID() + " " + ability.getPlayerLevel());
 			}
 		}
 	}
