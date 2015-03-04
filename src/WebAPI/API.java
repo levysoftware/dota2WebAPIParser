@@ -36,7 +36,7 @@ public class API {
 	 */
 	public static HeroMapping getHeroMapping() throws ParseException, IOException {
 		String apiCall = "http://api.steampowered.com/IEconDOTA2_570/GetHeroes/v1?key=" + Config.API_KEY;
-		return JsonParser.parseHeros(hitAPI(apiCall));
+		return JsonParser.parseHeroes(hitAPI(apiCall));
 	}
 	
 	public static String get64BitUName(String steamUserName) throws IOException, ParseException {
