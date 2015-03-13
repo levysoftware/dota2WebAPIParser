@@ -61,6 +61,12 @@ public class Match {
 	}
 	public void resetPlayerCounter() { playerCounter = 0; }
 	
+	/**
+	 * 
+	 * @param account32BitId
+	 * @param playerSlot
+	 * @param heroId
+	 */
 	public void addPlayer(long account32BitId, long playerSlot, long heroId) {
 		players.add(new PlayerData(account32BitId, playerSlot, heroId));
 	}

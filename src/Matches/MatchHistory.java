@@ -11,6 +11,12 @@ public class MatchHistory {
 	private ArrayList<Match> matches;
 	private int matchCounter;
 	
+	/**
+	 * 
+	 * @param numberOfResults
+	 * @param totalResults
+	 * @param resultsRemaining
+	 */
 	public MatchHistory(long numberOfResults, long totalResults, long resultsRemaining) {
 		NUMBER_RESULTS    = numberOfResults;
 		TOTAL_RESULTS     = totalResults;
@@ -20,7 +26,7 @@ public class MatchHistory {
 		matchCounter = 0;
 	}
 	
-	public long getNuberOfResults() { return NUMBER_RESULTS; }
+	public long getNumberOfResults() { return NUMBER_RESULTS; }
 	public long getTotalResults() { return TOTAL_RESULTS; }
 	public long getResultsRemaining() { return RESULTS_REMAINING; }
 	

@@ -1,5 +1,6 @@
 package Parse;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -15,51 +16,51 @@ import GameInfo.Ability;
 import GameInfo.ControlledUnits;
 import GameInfo.GameData;
 import GameInfo.PlayerDataExtended;
-import GameTracker.IO;
+import GameTracker.ReadDataFiles;
 import Matches.Match;
 import Matches.MatchHistory;
 
 public class JsonParser {
 
-	public static AbilityMapping parseAbilities(String json) throws ParseException {
+	public AbilityMapping parseAbilities() throws ParseException, IOException {
 		JSONParser parser   = new JSONParser();
-		JSONObject obj      = (JSONObject) parser.parse(json);
+		JSONObject obj      = (JSONObject) parser.parse(ReadDataFiles.getAbilitiesFileData());
 		JSONArray abilities = (JSONArray) obj.get("abilities");
-		
+
 		Iterator<JSONObject> iter = abilities.iterator();
 		AbilityMapping abilityMap = new AbilityMapping();
 		while(iter.hasNext()) {
 			JSONObject ability = iter.next();
-			
+
 			int abilityID = Integer.parseInt((String) ability.get("id"));
 			String abilityName = (String) ability.get("name");
-			
+
 			abilityMap.addMapping(abilityID, abilityName);
 		}
-		
+
 		return abilityMap;
 	}
-	
-	public static ItemMapping parseItems(String json) throws ParseException {
+
+	public ItemMapping parseItems() throws ParseException, IOException {
 		JSONParser parser   = new JSONParser();
-		JSONObject obj      = (JSONObject) parser.parse(json);
+		JSONObject obj      = (JSONObject) parser.parse(ReadDataFiles.getItemsFileData());
 		JSONArray items = (JSONArray) obj.get("items");
-		
+
 		Iterator<JSONObject> iter = items.iterator();
 		ItemMapping itemMap = new ItemMapping();
 		while(iter.hasNext()) {
 			JSONObject item = iter.next();
-			
+
 			int itemID      = (int) (long) item.get("id");
 			String itemName = (String) item.get("name");
-			
+
 			itemMap.addMapping(itemID, itemName);
 		}
-		
+
 		return itemMap;
 	}
 
-	public static HeroMapping parseHeroes(String json) throws ParseException {
+	public HeroMapping parseHeroes(String json) throws ParseException {
 		// TODO: Check for failure
 		JSONParser parser = new JSONParser();
 		JSONObject obj    = (JSONObject) parser.parse(json);
@@ -82,14 +83,14 @@ public class JsonParser {
 		return heroMap;
 	}
 
-	public static String parseVanityURL(String json) throws ParseException {
+	public String parseVanityURL(String json) throws ParseException {
 		// TODO: Check for failure
 		JSONParser parser = new JSONParser();
 		JSONObject obj = (JSONObject) parser.parse(json);
 		return (String) ((JSONObject) (obj.get("response"))).get("steamid");
 	}
 
-	public static MatchHistory parseMatchHistory(String json) throws ParseException {
+	public MatchHistory parseMatchHistory(String json) throws ParseException {
 		// TODO: Check for failure
 
 		JSONParser parser = new JSONParser();
@@ -134,7 +135,7 @@ public class JsonParser {
 		return matchHistory;
 	}
 
-	public static GameData parseMatch(String json) throws ParseException {
+	public GameData parseMatch(String json) throws ParseException {
 		// TODO: Check for failure
 		JSONParser parser = new JSONParser();
 		JSONObject obj = (JSONObject) parser.parse(json);
@@ -156,7 +157,9 @@ public class JsonParser {
 		long firstBloodTime = (long) info.get("first_blood_time");
 		long matchDuration =  (long) info.get("duration");
 
-		GameData data = new GameData(matchID, lobbyType, numHumanPlayers, positiveVotes, negativeVotes, gameMode);
+		boolean teamGame = ((info.get("dire_team_id") != null) || (info.get("radiant_team_id") != null));
+
+		GameData data = new GameData(matchID, lobbyType, numHumanPlayers, positiveVotes, negativeVotes, gameMode, teamGame);
 
 		data.setRadiantTowerStatus(radiantTowerStatus);
 		data.setRadiantBarracksStatus(radiantBarracksStatus);
@@ -211,10 +214,53 @@ public class JsonParser {
 			}
 		}
 
+		// Add team data if game is a team game (don't search for something not there)
+		if(info.get("dire_team_id") != null) {
+			String teamName   = (String) info.get("dire_name");
+			long direTeamId   = (long) info.get("dire_team_id");
+			long teamLogo     = (long) info.get("dire_logo");
+			boolean teamComplete = ((long) info.get("dire_team_complete") == 1) ? true : false;
+
+
+			data.addDireTeamInfo(teamName, teamLogo, teamComplete);
+		}
+		if((info.get("radiant_team_id") != null)) {
+			String teamName   = (String) info.get("radiant_name");
+			long direTeamId   = (long) info.get("radiant_team_id");
+			long teamLogo     = (long) info.get("radiant_logo");
+			boolean teamComplete = ((long) info.get("radiant_team_complete") == 1) ? true : false;
+
+			data.addDireTeamInfo(teamName, teamLogo, teamComplete);
+		}
+
+		// If game type has picks and bans, harvest them
+		JSONArray picks;
+		if((picks = (JSONArray) info.get("picks_bans")) != null) {
+			// Get team captains
+			long direTeamCapt = (long) info.get("dire_captain");
+			data.addDireTeamCaptain(direTeamCapt);
+			
+			long radiantTeamCapt = (long) info.get("radiant_captain");
+			data.addRadiantTeamCaptain(radiantTeamCapt);
+			
+			// Get picks and bans
+			Iterator<JSONObject> iter = picks.iterator();
+			while(iter.hasNext()) {
+				JSONObject pick = iter.next();
+				
+				boolean isPick = (boolean) pick.get("is_pick");
+				int heroId     = (int) (long) pick.get("hero_id");
+				int teamId     = (int) (long) pick.get("team");
+				int order      = (int) (long) pick.get("order");
+				
+				data.addPick(isPick, heroId, teamId, order);
+			}
+		}
+
 		return data;
 	}
 
-	private static ArrayList<Ability> getAbilities(JSONArray abilities) {
+	private ArrayList<Ability> getAbilities(JSONArray abilities) {
 		ArrayList<Ability> ret = new ArrayList<Ability>();
 
 		Iterator<JSONObject> iter = abilities.iterator();
@@ -229,7 +275,7 @@ public class JsonParser {
 	}
 
 	// TODO: Implement this feature
-	private static ArrayList<ControlledUnits> getControlledUnits(JSONArray abilities) {
+	private ArrayList<ControlledUnits> getControlledUnits(JSONArray abilities) {
 		return null;
 	}
 

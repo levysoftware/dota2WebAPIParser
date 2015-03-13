@@ -12,9 +12,15 @@ import WebAPI.API;
 
 public class DemoRecentMatches {
 	
-	public static void main(String[] args) throws IOException, ParseException {
-		String user32BitID = API.get32BitUName("thelevite");
-		MatchHistory history = API.getMatches(user32BitID);
+	/**
+	 * 
+	 * @param userName
+	 * @throws IOException
+	 * @throws ParseException
+	 */
+	public DemoRecentMatches(String userName) throws IOException, ParseException {
+		String user32BitID = API.get32BitUName(userName);
+		MatchHistory history = API.getMatchesByUser(user32BitID);
 		
 		// Look at first match only
 		Match m = history.getNextMatch();

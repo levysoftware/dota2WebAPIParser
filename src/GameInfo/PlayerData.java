@@ -7,7 +7,13 @@ public class PlayerData {
 	private final long HERO_ID;
 
 	private final boolean RADIANT;
-
+	
+	/**
+	 * 
+	 * @param accountID
+	 * @param playerSlot
+	 * @param heroID
+	 */
 	public PlayerData(long accountID, long playerSlot, long heroID) {
 		ACCOUNT_32BIT_ID = accountID;
 		PLAYER_SLOT      = playerSlot;
